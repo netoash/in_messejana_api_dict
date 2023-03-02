@@ -13,6 +13,14 @@ def get_restaurantes():
             )
         )
 
+@app.route('/restaurantes/<int:id>',methods=['GET'])
+def get_restaurantes_by_id(id):
+    for restaurante in restaurantes:
+        if restaurante.get('id') == id:
+            return make_response(
+                jsonify(restaurante)
+            )
+        
 @app.route('/restaurantes', methods = ['POST'])
 def cadastrar_retaurante():
     restaurante = request.json
@@ -23,4 +31,25 @@ def cadastrar_retaurante():
             restaurante = restaurante
         )
         )
+
+@app.route('/restaurantes/<int:id>',methods=['PUT'])
+def edit_restaurantes_by_id(id):
+    restaurante_alterado = request.get_json()
+    for indice,restaurante in enumerate(restaurantes):
+        if restaurante.get('id') == id:
+            restaurantes[indice].update(restaurante_alterado)
+            return make_response(
+                jsonify(restaurantes[indice])
+            )
+
+@app.route('/restaurantes/<int:id>',methods=['DELETE'])
+def delete_restaurante(id):
+    for indice, restaurante in enumerate(restaurantes):
+        if restaurante.get('id') == id:
+            del restaurantes[indice]
+
+    return make_response(
+        jsonify(restaurantes)   
+    )
+
 app.run(port = 5000, host = 'localhost', debug = True)
